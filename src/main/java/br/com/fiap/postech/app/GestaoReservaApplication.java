@@ -30,7 +30,6 @@ public class GestaoReservaApplication {
 
 	void genericApplicationContext(BeanDefinitionRegistry beanRegistry) {
 		ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner(beanRegistry);
-		beanDefinitionScanner.addIncludeFilter(removeModelFilter());
 		beanDefinitionScanner.addIncludeFilter(removeEntitiesFilter());
 		beanDefinitionScanner.scan("br.com.fiap.postech.app.gestaoreserva");
 	}
@@ -38,11 +37,6 @@ public class GestaoReservaApplication {
 	static TypeFilter removeEntitiesFilter() {
 		return (MetadataReader mr,
 				MetadataReaderFactory mrf) -> !mr.getClassMetadata().getClassName().endsWith("Model");
-	}
-
-	static TypeFilter removeModelFilter() {
-		return (MetadataReader mr,
-				MetadataReaderFactory mrf) -> !mr.getClassMetadata().getClassName().endsWith("Entity");
 	}
 
 }
