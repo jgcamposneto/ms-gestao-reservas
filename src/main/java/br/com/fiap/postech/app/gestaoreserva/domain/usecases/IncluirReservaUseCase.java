@@ -34,7 +34,7 @@ public class IncluirReservaUseCase {
         return reservaRepository.registrarReserva(reservaEntity);
     }
 
-    private BigDecimal calcularValorTotalConta(LocalDate entrada, LocalDate saida, List<Long> idQuartos) {
+    public BigDecimal calcularValorTotalConta(LocalDate entrada, LocalDate saida, List<Long> idQuartos) {
         long dias = ChronoUnit.DAYS.between(entrada, saida);
         BigDecimal valorTotalDiarias = idQuartos
                 .stream()
