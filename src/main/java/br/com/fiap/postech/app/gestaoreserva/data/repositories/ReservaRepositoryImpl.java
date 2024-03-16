@@ -31,4 +31,9 @@ public class ReservaRepositoryImpl implements ReservaRepository {
                 .map(ReservaModel::toReservaEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void confirmar(Long id) {
+        reservaDataSourceLocal.confirmarReserva(id);
+    }
 }

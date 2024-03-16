@@ -8,4 +8,6 @@ public interface ReservaRepository {
     ReservaEntity registrarReserva(ReservaEntity reservaEntity);
 
     List<ReservaEntity> buscarOcupacoesDosQuartos();
+
+    void confirmar(Long id);
 }

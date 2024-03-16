@@ -5,14 +5,12 @@ import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaQuartosOcupadosR
 import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaRequestModel;
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.usecases.BuscarOcupacaoDosQuartosUseCase;
+import br.com.fiap.postech.app.gestaoreserva.domain.usecases.ConfirmarReservaUseCase;
 import br.com.fiap.postech.app.gestaoreserva.domain.usecases.IncluirReservaUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,10 +22,14 @@ public class ReservaController implements ReservaApi {
     final IncluirReservaUseCase incluirReservaUseCase;
     final BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase;
 
+    final ConfirmarReservaUseCase confirmarReservaUseCase;
+
     public ReservaController(IncluirReservaUseCase incluirReservaUseCase,
-                             BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase) {
+                             BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase,
+                             ConfirmarReservaUseCase confirmarReservaUseCase) {
         this.incluirReservaUseCase = incluirReservaUseCase;
         this.buscarOcupacaoDosQuartosUseCase = buscarOcupacaoDosQuartosUseCase;
+        this.confirmarReservaUseCase = confirmarReservaUseCase;
     }
 
     @Override
@@ -56,6 +58,16 @@ public class ReservaController implements ReservaApi {
                             .stream()
                             .map(ReservaQuartosOcupadosResponseModel::new)
                             .collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<?> confirmar(@PathVariable("id") Long id) {
+        try {
+            confirmarReservaUseCase.call(id);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

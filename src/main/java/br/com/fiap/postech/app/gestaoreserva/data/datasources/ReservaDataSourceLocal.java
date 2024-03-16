@@ -11,4 +11,5 @@ public interface ReservaDataSourceLocal {
 
     List<ReservaModel> buscarOcupacoesDosQuartos();
 
+    void confirmarReserva(Long id);
 }
