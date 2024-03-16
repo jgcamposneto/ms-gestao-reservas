@@ -3,8 +3,10 @@ package br.com.fiap.postech.app.gestaoreserva.data.repositories;
 import br.com.fiap.postech.app.gestaoreserva.data.datasources.ReservaDataSourceLocal;
 import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaModel;
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
-import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaPadraoEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ReservaRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservaRepositoryImpl implements ReservaRepository {
 
@@ -20,5 +22,13 @@ public class ReservaRepositoryImpl implements ReservaRepository {
         ReservaModel reservaModelCriada = reservaDataSourceLocal.registrarReserva(reservaModel);
         reservaEntity.setId(reservaModelCriada.getId());
         return reservaEntity;
+    }
+
+    @Override
+    public List<ReservaEntity> buscarOcupacoesDosQuartos() {
+        return reservaDataSourceLocal.buscarOcupacoesDosQuartos()
+                .stream()
+                .map(ReservaModel::ToReservaEntity)
+                .collect(Collectors.toList());
     }
 }

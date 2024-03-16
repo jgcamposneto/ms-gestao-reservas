@@ -1,6 +1,7 @@
 package br.com.fiap.postech.app.gestaoreserva.domain.usecases;
 
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
+import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaPadraoEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ClienteRepository;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.QuartoRepository;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ReservaRepository;
@@ -33,6 +34,9 @@ class IncluirReservaUseCaseTest {
 
     @InjectMocks
     private IncluirReservaUseCase incluirReservaUseCase;
+
+    @Mock
+    private BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase;
 
     @BeforeEach
     void setUp() {
@@ -137,6 +141,39 @@ class IncluirReservaUseCaseTest {
         assertNotNull(result);
         assertEquals(expectedValorTotalConta, result);
         verify(quartoRepository, times(1)).consultarValorDiaria(any(Long.class));
+    }
+
+    @Test
+    void testVerificarConflitoDeReservas_DeveLancarExcecao_QuandoHouverConflito() {
+        // Mocking
+        LocalDate entrada = LocalDate.of(2024, 3, 10);
+        LocalDate saida = LocalDate.of(2024, 3, 15);
+        List<Long> idQuartos = Collections.singletonList(1L);
+        ReservaEntity reservaEntity = new ReservaPadraoEntity(1L, LocalDate.of(2024, 3, 12), LocalDate.of(2024, 3, 14), 2, idQuartos, null);
+        List<ReservaEntity> ocupacoesDosQuartos = Collections.singletonList(reservaEntity);
+
+        // Configuring mocks
+        when(buscarOcupacaoDosQuartosUseCase.call()).thenReturn(ocupacoesDosQuartos);
+
+        // Execution and Verification
+        assertThrows(IllegalStateException.class, () -> incluirReservaUseCase.verificarConflitoDeReservas(entrada, saida, idQuartos));
+        verify(buscarOcupacaoDosQuartosUseCase, times(1)).call();
+    }
+
+    @Test
+    void testVerificarConflitoDeReservas_NaoDeveLancarExcecao_QuandoNaoHouverConflito() {
+        // Mocking
+        LocalDate entrada = LocalDate.of(2024, 3, 5);
+        LocalDate saida = LocalDate.of(2024, 3, 9);
+        List<Long> idQuartos = Collections.singletonList(1L);
+        List<ReservaEntity> ocupacoesDosQuartos = Collections.emptyList();
+
+        // Configuring mocks
+        when(buscarOcupacaoDosQuartosUseCase.call()).thenReturn(ocupacoesDosQuartos);
+
+        // Execution and Verification
+        incluirReservaUseCase.verificarConflitoDeReservas(entrada, saida, idQuartos);
+        verify(buscarOcupacaoDosQuartosUseCase, times(1)).call();
     }
 
 }

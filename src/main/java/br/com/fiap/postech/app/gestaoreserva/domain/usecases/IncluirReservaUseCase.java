@@ -17,17 +17,22 @@ public class IncluirReservaUseCase {
     final ReservaRepository reservaRepository;
     final ClienteRepository clienteRepository;
     final QuartoRepository quartoRepository;
-
-    public IncluirReservaUseCase(ReservaRepository reservaRepository, ClienteRepository clienteRepository, QuartoRepository quartoRepository) {
+    final BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase;
+    public IncluirReservaUseCase(ReservaRepository reservaRepository,
+                                 ClienteRepository clienteRepository,
+                                 QuartoRepository quartoRepository,
+                                 BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase) {
         this.reservaRepository = reservaRepository;
         this.clienteRepository = clienteRepository;
         this.quartoRepository = quartoRepository;
+        this.buscarOcupacaoDosQuartosUseCase = buscarOcupacaoDosQuartosUseCase;
     }
 
     public ReservaEntity call(Long idCliente, LocalDate entrada, LocalDate saida, int totalPessoas, List<Long> idQuartos) {
         validarDataEntradaMenorQueSaida(entrada, saida);
         validarCliente(idCliente);
         validarQuartos(idQuartos);
+        verificarConflitoDeReservas(entrada, saida, idQuartos);
         BigDecimal valorTotalConta = calcularValorTotalConta(entrada, saida, idQuartos);
         ReservaEntity reservaEntity =
                 new ReservaPadraoEntity(idCliente, entrada, saida, totalPessoas, idQuartos, valorTotalConta);
@@ -41,6 +46,24 @@ public class IncluirReservaUseCase {
                 .map(quartoRepository::consultarValorDiaria)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return valorTotalDiarias.multiply(BigDecimal.valueOf(dias));
+    }
+
+    public void verificarConflitoDeReservas(LocalDate entrada, LocalDate saida, List<Long> idQuartos) {
+        List<ReservaEntity> ocupacoesDosQuartos = buscarOcupacaoDosQuartosUseCase.call();
+        for (ReservaEntity reserva : ocupacoesDosQuartos) {
+            LocalDate reservaEntrada = reserva.getEntrada();
+            LocalDate reservaSaida = reserva.getSaida();
+            List<Long> reservaIdQuartos = reserva.getIdQuartos();
+            boolean conflitoData = (entrada.isBefore(reservaEntrada) && saida.isAfter(reservaEntrada))
+                    ||
+                    (entrada.isBefore(reservaSaida) && saida.isAfter(reservaSaida))
+                    ||
+                    (entrada.isAfter(reservaEntrada) && saida.isBefore(reservaSaida));
+            boolean conflitoQuarto = reservaIdQuartos.stream().anyMatch(idQuartos::contains);
+            if (conflitoData && conflitoQuarto) {
+                throw new IllegalStateException("Conflito de reservas detectado. Consulte a ocupação dos quartos");
+            }
+        }
     }
 
     private void validarQuartos(List<Long> idQuartos) {

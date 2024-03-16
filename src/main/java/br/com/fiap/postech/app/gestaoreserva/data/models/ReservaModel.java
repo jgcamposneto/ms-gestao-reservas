@@ -49,4 +49,15 @@ public class ReservaModel {
         reservaModel.setValorTotalConta(reservaEntity.getValorTotalConta());
         return reservaModel;
     }
+
+    public static ReservaEntity ToReservaEntity(ReservaModel reservaModel) {
+        return new ReservaPadraoEntity(
+                reservaModel.getIdCliente(),
+                reservaModel.getEntrada(),
+                reservaModel.getSaida(),
+                reservaModel.getTotalPessoas(),
+                reservaModel.getIdQuartos(),
+                reservaModel.getValorTotalConta()
+        );
+    }
 }

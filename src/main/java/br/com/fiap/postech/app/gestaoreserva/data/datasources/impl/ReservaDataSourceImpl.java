@@ -4,6 +4,8 @@ import br.com.fiap.postech.app.gestaoreserva.data.datasources.JpaReservaReposito
 import br.com.fiap.postech.app.gestaoreserva.data.datasources.ReservaDataSourceLocal;
 import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaModel;
 
+import java.util.List;
+
 public class ReservaDataSourceImpl implements ReservaDataSourceLocal {
 
     final JpaReservaRepository jpaReservaRepository;
@@ -15,5 +17,10 @@ public class ReservaDataSourceImpl implements ReservaDataSourceLocal {
     @Override
     public ReservaModel registrarReserva(ReservaModel reservaModel) {
         return jpaReservaRepository.save(reservaModel);
+    }
+
+    @Override
+    public List<ReservaModel> buscarOcupacoesDosQuartos() {
+        return jpaReservaRepository.findAll();
     }
 }
