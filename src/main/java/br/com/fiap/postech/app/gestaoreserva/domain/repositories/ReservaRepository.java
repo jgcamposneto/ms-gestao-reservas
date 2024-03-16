@@ -9,5 +9,7 @@ public interface ReservaRepository {
 
     List<ReservaEntity> buscarOcupacoesDosQuartos();
 
-    void confirmar(Long id);
+    ReservaEntity confirmar(Long id);
+
+    void enviarEmailConfirmacao(ReservaEntity reservaEntityConfirmada);
 }

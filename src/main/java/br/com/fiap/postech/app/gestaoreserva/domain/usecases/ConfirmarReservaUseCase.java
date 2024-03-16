@@ -1,5 +1,6 @@
 package br.com.fiap.postech.app.gestaoreserva.domain.usecases;
 
+import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ReservaRepository;
 
 public class ConfirmarReservaUseCase {
@@ -11,7 +12,8 @@ public class ConfirmarReservaUseCase {
     }
 
     public void call(Long id) {
-        reservaRepository.confirmar(id);
+        ReservaEntity reservaEntityConfirmada = reservaRepository.confirmar(id);
+        reservaRepository.enviarEmailConfirmacao(reservaEntityConfirmada);
     }
 
 

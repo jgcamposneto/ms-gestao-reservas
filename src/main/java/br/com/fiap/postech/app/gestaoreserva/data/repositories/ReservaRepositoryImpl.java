@@ -33,7 +33,12 @@ public class ReservaRepositoryImpl implements ReservaRepository {
     }
 
     @Override
-    public void confirmar(Long id) {
-        reservaDataSourceLocal.confirmarReserva(id);
+    public ReservaEntity confirmar(Long id) {
+        return ReservaModel.toReservaEntity(reservaDataSourceLocal.confirmarReserva(id));
+    }
+
+    @Override
+    public void enviarEmailConfirmacao(ReservaEntity reservaEntityConfirmada) {
+        reservaDataSourceLocal.enviarEmailConfirmacao(reservaEntityConfirmada);
     }
 }
