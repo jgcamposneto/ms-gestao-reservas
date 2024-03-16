@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface ReservaEntity {
 
+    public static final String AGUARDANDO_CONFIRMACAO = "AGUARDANDO_CONFIRMACAO";
+    public static final String CONFIRMADO = "CONFIRMADO";
+
     Long getId();
     Long getIdCliente();
     LocalDate getEntrada();
@@ -13,5 +16,7 @@ public interface ReservaEntity {
     int getTotalPessoas();
     List<Long> getIdQuartos();
     BigDecimal getValorTotalConta();
+    String getStatus();
     void setId(Long id);
+
 }

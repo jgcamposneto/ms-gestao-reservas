@@ -149,7 +149,14 @@ class IncluirReservaUseCaseTest {
         LocalDate entrada = LocalDate.of(2024, 3, 10);
         LocalDate saida = LocalDate.of(2024, 3, 15);
         List<Long> idQuartos = Collections.singletonList(1L);
-        ReservaEntity reservaEntity = new ReservaPadraoEntity(1L, LocalDate.of(2024, 3, 12), LocalDate.of(2024, 3, 14), 2, idQuartos, null);
+        ReservaEntity reservaEntity = new ReservaPadraoEntity(
+                1L,
+                LocalDate.of(2024, 3, 12),
+                LocalDate.of(2024, 3, 14),
+                2,
+                idQuartos,
+                BigDecimal.valueOf(0),
+                ReservaPadraoEntity.AGUARDANDO_CONFIRMACAO);
         List<ReservaEntity> ocupacoesDosQuartos = Collections.singletonList(reservaEntity);
 
         // Configuring mocks

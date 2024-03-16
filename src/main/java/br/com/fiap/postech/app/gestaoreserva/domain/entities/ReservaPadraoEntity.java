@@ -14,14 +14,16 @@ public class ReservaPadraoEntity implements ReservaEntity {
     private int totalPessoas;
     private List<Long> idQuartos;
     private BigDecimal valorTotalConta;
+    private String status;
 
-    public ReservaPadraoEntity(Long idCliente, LocalDate entrada, LocalDate saida, int totalPessoas, List<Long> idQuartos, BigDecimal valorTotalConta) {
+    public ReservaPadraoEntity(Long idCliente, LocalDate entrada, LocalDate saida, int totalPessoas, List<Long> idQuartos, BigDecimal valorTotalConta, String status) {
         this.idCliente = idCliente;
         this.entrada = entrada;
         this.saida = saida;
         this.totalPessoas = totalPessoas;
         this.idQuartos = idQuartos;
         this.valorTotalConta = valorTotalConta;
+        this.status = status;
     }
 
     public ReservaPadraoEntity() {
@@ -84,6 +86,11 @@ public class ReservaPadraoEntity implements ReservaEntity {
     @Override
     public BigDecimal getValorTotalConta() {
         return valorTotalConta;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
     }
 
     public void setValorTotalConta(BigDecimal valorTotalConta) {

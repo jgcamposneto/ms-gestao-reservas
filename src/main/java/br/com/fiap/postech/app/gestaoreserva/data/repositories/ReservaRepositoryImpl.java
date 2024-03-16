@@ -28,7 +28,7 @@ public class ReservaRepositoryImpl implements ReservaRepository {
     public List<ReservaEntity> buscarOcupacoesDosQuartos() {
         return reservaDataSourceLocal.buscarOcupacoesDosQuartos()
                 .stream()
-                .map(ReservaModel::ToReservaEntity)
+                .map(ReservaModel::toReservaEntity)
                 .collect(Collectors.toList());
     }
 }

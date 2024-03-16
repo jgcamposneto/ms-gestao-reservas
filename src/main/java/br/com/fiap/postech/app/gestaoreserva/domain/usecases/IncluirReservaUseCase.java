@@ -35,7 +35,14 @@ public class IncluirReservaUseCase {
         verificarConflitoDeReservas(entrada, saida, idQuartos);
         BigDecimal valorTotalConta = calcularValorTotalConta(entrada, saida, idQuartos);
         ReservaEntity reservaEntity =
-                new ReservaPadraoEntity(idCliente, entrada, saida, totalPessoas, idQuartos, valorTotalConta);
+                new ReservaPadraoEntity(
+                        idCliente,
+                        entrada,
+                        saida,
+                        totalPessoas,
+                        idQuartos,
+                        valorTotalConta,
+                        ReservaEntity.AGUARDANDO_CONFIRMACAO);
         return reservaRepository.registrarReserva(reservaEntity);
     }
 

@@ -39,6 +39,9 @@ public class ReservaModel {
 
     private BigDecimal valorTotalConta;
 
+    @Enumerated(EnumType.STRING)
+    private StatusEnumModel status;
+
     public static ReservaModel toReservaModel(ReservaEntity reservaEntity) {
         ReservaModel reservaModel = new ReservaModel();
         reservaModel.setIdCliente(reservaEntity.getIdCliente());
@@ -47,17 +50,19 @@ public class ReservaModel {
         reservaModel.setTotalPessoas(reservaEntity.getTotalPessoas());
         reservaModel.setIdQuartos(reservaEntity.getIdQuartos());
         reservaModel.setValorTotalConta(reservaEntity.getValorTotalConta());
+        reservaModel.setStatus(StatusEnumModel.valueOf(reservaEntity.getStatus()));
         return reservaModel;
     }
 
-    public static ReservaEntity ToReservaEntity(ReservaModel reservaModel) {
+    public static ReservaEntity toReservaEntity(ReservaModel reservaModel) {
         return new ReservaPadraoEntity(
                 reservaModel.getIdCliente(),
                 reservaModel.getEntrada(),
                 reservaModel.getSaida(),
                 reservaModel.getTotalPessoas(),
                 reservaModel.getIdQuartos(),
-                reservaModel.getValorTotalConta()
+                reservaModel.getValorTotalConta(),
+                reservaModel.getStatus().toString()
         );
     }
 }
