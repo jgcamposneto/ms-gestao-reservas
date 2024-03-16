@@ -3,6 +3,7 @@ package br.com.fiap.postech.app.gestaoreserva.domain.usecases;
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaPadraoEntity;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ClienteRepository;
+import br.com.fiap.postech.app.gestaoreserva.domain.repositories.OpcionalRepository;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.QuartoRepository;
 import br.com.fiap.postech.app.gestaoreserva.domain.repositories.ReservaRepository;
 
@@ -10,7 +11,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class IncluirReservaUseCase {
 
@@ -18,22 +21,32 @@ public class IncluirReservaUseCase {
     final ClienteRepository clienteRepository;
     final QuartoRepository quartoRepository;
     final BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase;
+    final OpcionalRepository opcionaisRepository;
+
     public IncluirReservaUseCase(ReservaRepository reservaRepository,
                                  ClienteRepository clienteRepository,
                                  QuartoRepository quartoRepository,
-                                 BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase) {
+                                 BuscarOcupacaoDosQuartosUseCase buscarOcupacaoDosQuartosUseCase,
+                                 OpcionalRepository opcionaisRepository) {
         this.reservaRepository = reservaRepository;
         this.clienteRepository = clienteRepository;
         this.quartoRepository = quartoRepository;
         this.buscarOcupacaoDosQuartosUseCase = buscarOcupacaoDosQuartosUseCase;
+        this.opcionaisRepository = opcionaisRepository;
     }
 
-    public ReservaEntity call(Long idCliente, LocalDate entrada, LocalDate saida, int totalPessoas, List<Long> idQuartos) {
+    public ReservaEntity call(Long idCliente,
+                              LocalDate entrada,
+                              LocalDate saida,
+                              int totalPessoas,
+                              List<Long> idQuartos,
+                              Map<Long, Integer> opcionais) {
         validarDataEntradaMenorQueSaida(entrada, saida);
         validarCliente(idCliente);
         validarQuartos(idQuartos);
+        validarOpcionais(opcionais);
         verificarConflitoDeReservas(entrada, saida, idQuartos);
-        BigDecimal valorTotalConta = calcularValorTotalConta(entrada, saida, idQuartos);
+        BigDecimal valorTotalConta = calcularValorTotalConta(entrada, saida, idQuartos, opcionais);
         ReservaEntity reservaEntity =
                 new ReservaPadraoEntity(
                         idCliente,
@@ -46,13 +59,23 @@ public class IncluirReservaUseCase {
         return reservaRepository.registrarReserva(reservaEntity);
     }
 
-    public BigDecimal calcularValorTotalConta(LocalDate entrada, LocalDate saida, List<Long> idQuartos) {
+    public BigDecimal calcularValorTotalConta(LocalDate entrada,
+                                              LocalDate saida,
+                                              List<Long> idQuartos,
+                                              Map<Long, Integer> opcionais) {
         long dias = ChronoUnit.DAYS.between(entrada, saida);
         BigDecimal valorTotalDiarias = idQuartos
                 .stream()
                 .map(quartoRepository::consultarValorDiaria)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return valorTotalDiarias.multiply(BigDecimal.valueOf(dias));
+        BigDecimal valorTotalOpcionais = opcionais.entrySet()
+                .stream()
+                .map(entry ->
+                        opcionaisRepository
+                                .consultarValor(entry.getKey())
+                                .multiply(BigDecimal.valueOf(entry.getValue())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return valorTotalDiarias.multiply(BigDecimal.valueOf(dias)).add(valorTotalOpcionais);
     }
 
     public void verificarConflitoDeReservas(LocalDate entrada, LocalDate saida, List<Long> idQuartos) {
@@ -71,6 +94,14 @@ public class IncluirReservaUseCase {
                 throw new IllegalStateException("Conflito de reservas detectado. Consulte a ocupação dos quartos");
             }
         }
+    }
+
+    private void validarOpcionais(Map<Long, Integer> opcionais) {
+        opcionais.keySet().forEach(id -> {
+            if(!opcionaisRepository.existeOpcional(id)) {
+                throw new NoSuchElementException("Um ou mais opcionais não existe");
+            }
+        });
     }
 
     private void validarQuartos(List<Long> idQuartos) {

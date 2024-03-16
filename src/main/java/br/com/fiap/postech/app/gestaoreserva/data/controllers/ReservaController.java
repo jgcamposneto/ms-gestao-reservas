@@ -1,6 +1,7 @@
 package br.com.fiap.postech.app.gestaoreserva.data.controllers;
 
 
+import br.com.fiap.postech.app.gestaoreserva.data.models.OpcionaisRequestModel;
 import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaQuartosOcupadosResponseModel;
 import br.com.fiap.postech.app.gestaoreserva.data.models.ReservaRequestModel;
 import br.com.fiap.postech.app.gestaoreserva.domain.entities.ReservaEntity;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,12 +38,14 @@ public class ReservaController implements ReservaApi {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> incluir(ReservaRequestModel reservaRequestModel) {
         try {
+
             ReservaEntity reservaEntityCriado =
                     incluirReservaUseCase.call(reservaRequestModel.getIdCliente(),
                             reservaRequestModel.getEntrada(),
                             reservaRequestModel.getSaida(),
                             reservaRequestModel.getTotalPessoas(),
-                            reservaRequestModel.getIdQuartos());
+                            reservaRequestModel.getIdQuartos(),
+                            reservaRequestModel.opcionaisToMap());
             return ResponseEntity.status(HttpStatus.CREATED).body(reservaEntityCriado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

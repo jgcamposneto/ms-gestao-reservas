@@ -8,6 +8,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 public class ReservaRequestModel {
@@ -28,5 +30,12 @@ public class ReservaRequestModel {
 
     @NotEmpty(message = "A lista de IDs de quartos não pode estar vazia")
     private List<Long> idQuartos;
+
+    List<OpcionaisRequestModel> opcionais;
+
+    public Map<Long, Integer> opcionaisToMap() {
+        return opcionais.stream().collect(
+                Collectors.toMap(OpcionaisRequestModel::getId, OpcionaisRequestModel::getQuantidade));
+    }
 
 }
