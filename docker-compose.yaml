@@ -1,0 +1,36 @@
+version: "3"
+services:
+  reserva:
+    image: gestao-reserva
+    ports:
+      - "8082:8082"
+    networks:
+      - hospitalidade
+    depends_on:
+      - customer
+      - options
+      - quarto
+
+  customer:
+    image: customer-management
+    ports:
+      - "8083:8083"
+    networks:
+      - hospitalidade
+
+  options:
+    image: service-and-options-management
+    ports:
+      - "8084:8084"
+    networks:
+      - hospitalidade
+
+  quarto:
+    image: gestao-quarto
+    ports:
+      - "8081:8081"
+    networks:
+      - hospitalidade
+
+networks:
+  hospitalidade:
