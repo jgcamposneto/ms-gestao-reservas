@@ -107,10 +107,10 @@ curl -X POST --location "http://localhost:8081/quartos" \
 
 _pra quando já tem reservas cadastradas_
 
-#### GET /quartos/{{id}}
+#### GET /reservas
 
 ```bash
-curl -X GET --location "http://localhost:8081/quartos/{{id}}"
+curl -X GET --location "http://localhost:8082/reservas"
 ```
 
 ### Terceiro passo é incluir a reserva
