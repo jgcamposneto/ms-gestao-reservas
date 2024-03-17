@@ -6,6 +6,9 @@ Este é um projeto do Hackaton da Postech/FIAP de Arquitetura de Desenvolvimento
 Esse microsserviço é referente a Gestão de Reservas da solução para um Sistema de
 Hospitalidade.
 
+A documentação da arquitetura e a coberta dos testes 
+estão [nesse link](https://drive.google.com/file/d/1u3SovGCmQqoQVN9pgIklRy98oVWNpIJt/view?usp=sharing).
+
 ## O que eu devo configurar?
 
 Este projeto implementa uma API Rest com Spring Boot, empacotado
