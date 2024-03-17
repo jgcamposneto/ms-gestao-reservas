@@ -23,7 +23,7 @@ public class OpcionalDataSourceImpl implements OpcionalDataSourceLocal {
     @Override
     public boolean existeOpcional(Long id) {
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8084/v1/services_option/{id}",
+                "http://options:8084/v1/services_option/{id}",
                 String.class,
                 id
         );
@@ -36,7 +36,7 @@ public class OpcionalDataSourceImpl implements OpcionalDataSourceLocal {
         BigDecimal valor = BigDecimal.ZERO;
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8084/v1/services_option/{id}",
+                "http://options:8084/v1/services_option/{id}",
                 String.class,
                 id
         );

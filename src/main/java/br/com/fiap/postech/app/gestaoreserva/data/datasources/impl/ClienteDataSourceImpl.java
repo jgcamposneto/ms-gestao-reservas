@@ -16,7 +16,7 @@ public class ClienteDataSourceImpl implements ClienteDataSourceLocal {
     @Override
     public boolean existeCliente(Long id) {
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8083/v1/customers/{id}",
+                "http://customer:8083/v1/customers/{id}",
                 String.class,
                 id
         );

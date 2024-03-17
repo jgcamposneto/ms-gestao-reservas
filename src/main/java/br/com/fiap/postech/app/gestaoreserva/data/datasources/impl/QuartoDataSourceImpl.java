@@ -27,7 +27,7 @@ public class QuartoDataSourceImpl implements QuartoDataSourceLocal {
     public boolean existeQuarto(Long id) {
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8081/quartos/{id}",
+                "http://quarto:8081/quartos/{id}",
                 String.class,
                 id
         );
@@ -41,7 +41,7 @@ public class QuartoDataSourceImpl implements QuartoDataSourceLocal {
         BigDecimal valorDiaria = BigDecimal.ZERO;
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8081/quartos/{id}",
+                "http://quarto:8081/quartos/{id}",
                 String.class,
                 id
         );
