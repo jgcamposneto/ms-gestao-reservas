@@ -1,7 +1,7 @@
 version: "3"
 services:
   reserva:
-    image: gestao-reserva
+    image: joaogabrielcampos/gestao-reserva:latest
     ports:
       - "8082:8082"
     networks:
@@ -12,21 +12,21 @@ services:
       - quarto
 
   customer:
-    image: customer-management
+    image: joaogabrielcampos/customer-management:latest
     ports:
       - "8083:8083"
     networks:
       - hospitalidade
 
   options:
-    image: service-and-options-management
+    image: joaogabrielcampos/service-and-options-management:latest
     ports:
       - "8084:8084"
     networks:
       - hospitalidade
 
   quarto:
-    image: gestao-quarto
+    image: joaogabrielcampos/gestao-quarto:latest
     ports:
       - "8081:8081"
     networks:
