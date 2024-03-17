@@ -58,8 +58,11 @@ networks:
   hospitalidade:
 ```
 
-Esse arquivo inicializa os microsserviços de Gestão de Reserva,
-Gestão de Quarto, Gestão de Cliente e Gestão de Serviços e Opcionais.
+Esse arquivo inicializa os microsserviços de
+- [Gestão de Reserva](https://github.com/jgcamposneto/ms-gestao-reservas)
+- [Gestão de Quarto](https://github.com/jgcamposneto/ms-gestao-quartos)
+- [Gestão de Cliente](https://github.com/iagoomes/customer-management)
+- [Gestão de Serviços e Opcionais](https://github.com/iagoomes/service-and-options-management)
 
 ## Como testar o projeto?
 
