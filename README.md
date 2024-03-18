@@ -6,6 +6,9 @@ Este é um projeto do Hackaton da Postech/FIAP de Arquitetura de Desenvolvimento
 Esse microsserviço é referente a Gestão de Reservas da solução para um Sistema de
 Hospitalidade.
 
+O vídeo para a explanação do projeto está
+[nesse link](https://www.loom.com/share/bd84455936ef4812b24497f5102d5970?sid=4156eb72-fed7-444e-afe6-b69f74610c59).
+
 A documentação da arquitetura e a coberta dos testes 
 estão [nesse link](https://drive.google.com/file/d/1u3SovGCmQqoQVN9pgIklRy98oVWNpIJt/view?usp=sharing).
 
